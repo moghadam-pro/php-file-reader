@@ -6,9 +6,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     min-height: 100vh;
-    direction: rtl;
     padding: 20px;
 }
 
@@ -41,11 +40,12 @@ header p {
 }
 
 .gallery-item {
-    background: white;
+    background: #333;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .gallery-item:hover {
@@ -58,7 +58,7 @@ header p {
     width: 100%;
     padding-bottom: 100%;
     overflow: hidden;
-    background: #f0f0f0;
+    background: #555;
 }
 
 .image-wrapper img {
@@ -89,8 +89,8 @@ header p {
 }
 
 .view-btn {
-    background: white;
-    color: #667eea;
+    background: #444;
+    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -110,7 +110,7 @@ header p {
 
 .image-name {
     font-weight: bold;
-    color: #333;
+    color: #fff;
     margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
@@ -119,21 +119,21 @@ header p {
 
 .image-date {
     font-size: 0.9rem;
-    color: #666;
+    color: #ccc;
     margin-bottom: 3px;
 }
 
 .image-size {
     font-size: 0.85rem;
-    color: #999;
+    color: #aaa;
 }
 
 .no-images {
     text-align: center;
-    background: white;
+    background: #333;
     padding: 40px;
     border-radius: 10px;
-    color: #666;
+    color: #ccc;
     font-size: 1.1rem;
 }
 

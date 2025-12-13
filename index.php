@@ -1,12 +1,35 @@
 <?php
-// Image directory path
-$images_dir = __DIR__ . '/images';
+// Base directory
+$base_dir = __DIR__;
 
 // Allowed image extensions
 $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+$images_dir = null;
+$folder_name = 'Gallery'; // default
+
+// Find the folder containing images
+$folders = scandir($base_dir);
+foreach ($folders as $folder) {
+    if ($folder != '.' && $folder != '..' && is_dir($base_dir . '/' . $folder)) {
+        $test_dir = $base_dir . '/' . $folder;
+        $files = scandir($test_dir);
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $file_extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                if (in_array($file_extension, $allowed_extensions)) {
+                    $images_dir = $test_dir;
+                    $folder_name = $folder;
+                    break 2;
+                }
+            }
+        }
+    }
+}
+
 $images = [];
 
-if (is_dir($images_dir)) {
+if ($images_dir) {
     $files = scandir($images_dir);
     
     foreach ($files as $file) {
@@ -18,7 +41,7 @@ if (is_dir($images_dir)) {
             if (is_file($file_path) && in_array($file_extension, $allowed_extensions)) {
                 $images[] = [
                     'name' => $file,
-                    'path' => 'images/' . $file,
+                    'path' => $folder_name . '/' . $file,
                     'size' => filesize($file_path),
                     'date' => date('Y-m-d H:i', filemtime($file_path))
                 ];
@@ -34,32 +57,32 @@ usort($images, function($a, $b) {
 ?>
 
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نمایش عکس‌ها</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title><?php echo htmlspecialchars($folder_name); ?></title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>گالری عکس</h1>
-            <p>تعداد عکس: <strong><?php echo count($images); ?></strong></p>
+            <h1><?php echo htmlspecialchars($folder_name); ?></h1>
+            <p>Gallery Count: <strong><?php echo count($images); ?></strong></p>
         </header>
 
         <main>
             <?php if (count($images) > 0): ?>
                 <div class="gallery-grid">
                     <?php foreach ($images as $image): ?>
-                        <div class="gallery-item">
+                        <div class="gallery-item" onclick="openModal('<?php echo htmlspecialchars($image['path']); ?>')">
                             <div class="image-wrapper">
                                 <img src="<?php echo htmlspecialchars($image['path']); ?>" 
                                      alt="<?php echo htmlspecialchars($image['name']); ?>"
                                      loading="lazy">
                                 <div class="overlay">
-                                    <button class="view-btn" onclick="openModal('<?php echo htmlspecialchars($image['path']); ?>')">
-                                        بزرگ‌نمایی
+                                    <button class="view-btn">
+                                        Click to Zoom
                                     </button>
                                 </div>
                             </div>
@@ -73,7 +96,7 @@ usort($images, function($a, $b) {
                 </div>
             <?php else: ?>
                 <div class="no-images">
-                    <p>هیچ عکسی در پوشه یافت نشد.</p>
+                    <p>Nothing found on this directory</p>
                 </div>
             <?php endif; ?>
         </main>
@@ -85,6 +108,13 @@ usort($images, function($a, $b) {
         <img class="modal-content" id="modalImage">
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const images = [
+            <?php foreach ($images as $image): ?>
+                '<?php echo htmlspecialchars($image['path']); ?>',
+            <?php endforeach; ?>
+        ];
+    </script>
 </body>
 </html>
